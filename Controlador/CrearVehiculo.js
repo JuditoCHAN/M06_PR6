@@ -13,7 +13,7 @@ document.getElementById('formCrearVehiculo').addEventListener('submit', function
         console.log("coche");
         let coche = new Coche(modelo, traccion, velocidadMin, velocidadMax);
         
-        vehiculosGuardados = JSON.parse(localStorage.getItem('vehiculos')) || [];
+        let vehiculosGuardados = JSON.parse(localStorage.getItem('vehiculos')) || [];
         vehiculosGuardados.push(coche);
     
         alert("¡Se ha creado el coche!");
@@ -27,7 +27,7 @@ document.getElementById('formCrearVehiculo').addEventListener('submit', function
 
         let moto = new Motocicleta(modelo, traccion, velocidadMin, velocidadMax);
         
-        vehiculosGuardados = JSON.parse(localStorage.getItem('vehiculos')) || [];
+        let vehiculosGuardados = JSON.parse(localStorage.getItem('vehiculos')) || [];
         vehiculosGuardados.push(moto);
     
         alert("¡Se ha creado la moto!");
