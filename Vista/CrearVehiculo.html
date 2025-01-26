@@ -96,11 +96,14 @@
         <form id="formCrearVehiculo">
             <div class="form-group mt-4">
                 <label for="modelo">Modelo: </label>
-                <select name="modelo" id="modelo" class="form-control" required>
-                    <option value="Ferrari F8">Ferrari F8</option>
-                    <option value="Porsche 911">Porsche 911</option>
-                    <option value="Yamaha YZF-R1">Yamaha YZF-R1</option>
-                    <option value="Kawasaki Ninja ZX-10R">Kawasaki Ninja ZX-10R</option>
+                <input type="text" name="modelo" id="modelo" class="form-control" required>
+            </div>
+
+            <div class="form-group mt-4">
+                <label for="tipo">Tipo de vehiculo: </label>
+                <select name="tipo" id="tipo" class="form-control" required>
+                    <option value="coche">Coche</option>
+                    <option value="moto">Moto</option>
                 </select>
             </div>
 
@@ -128,6 +131,8 @@
     </div>
 
     <script src="../Modelo/Vehiculo.js"></script>
+    <script src="../Modelo/Coche.js"></script>
+    <script src="../Modelo/Motocicleta.js"></script>
     <script src="../Controlador/CrearVehiculo.js"></script>
 </body>
 </html>

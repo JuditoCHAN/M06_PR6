@@ -1,12 +1,12 @@
 //Primero, rellenar el select con los circuitos disponibles
 document.getElementById('circuitos').innerHTML = '';
 
-circuitosJson = JSON.parse(localStorage.getItem('circuitos'));
+circuitosJson = JSON.parse(localStorage.getItem('circuitos')) || [];
 console.log('circuitos guardados: ', circuitosJson);
 
 //volver a transformar los objetos planos almacenados en el JSON de localStorage a Circuitos
 circuitos = circuitosJson.map(circuito => {
-    return new Circuito(circuito._nombre, circuito.tiempo, circuito._longitud);
+    return new Circuito(circuito._nombre, circuito._tiempo, circuito._longitud);
 });
 
 contenidoSelect = '';
@@ -28,7 +28,7 @@ if(jugadoresJson && jugadoresJson.length > 0) {
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="jugadores" value="${jugador._nombre}" id="jugador${jugador._nombre}">
                 <label class="form-check-label" for="jugador${jugador._nombre}">
-                    ${jugador._nombre} | ${jugador._vehiculo._modelo} | ${jugador._vehiculo._traccion} | ${jugador._vehiculo._velocidadMax} | ${jugador._vehiculo._velocidadMin}
+                    ${jugador._nombre} | ${jugador._vehiculo._modelo} | <strong>${jugador._vehiculo._tipo}</strong> | ${jugador._vehiculo._traccion} | ${jugador._vehiculo._velocidadMax} | ${jugador._vehiculo._velocidadMin}
                 </label>
             </div>
         `;
@@ -53,7 +53,7 @@ document.getElementById('formCrearCarrera').addEventListener('submit', (event) =
     let checkboxes = document.querySelectorAll('input[name="jugadores"]:checked');
     checkboxes.forEach(checkbox => {
         console.log(checkbox.value);
-        jugadores.push(checkbox.value);
+        jugadores.push(checkbox.value); //nombre del jugador
     });
     
     if(jugadores.length > 4 || jugadores.length < 2) {
@@ -61,8 +61,8 @@ document.getElementById('formCrearCarrera').addEventListener('submit', (event) =
     } else {
         //creamos un objeto partida
         let partida = {
-            circuito,
-            jugadores
+            circuito, //nombre circuito
+            jugadores //array con nombres de los jugadores
         };
 
         localStorage.setItem('partida', JSON.stringify(partida));

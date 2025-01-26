@@ -17,9 +17,9 @@ function obtenerJugadoresEnObjeto(jugadoresElegidos) {
     let jugadoresLocalStorage = JSON.parse(localStorage.getItem('jugadores'));
     
     let jugadoresObj = [];
-    jugadoresElegidos.forEach((jugadorElegido) => {
+    jugadoresElegidos.forEach((nombreJugadorElegido) => {
         for(let i = 0; i < jugadoresLocalStorage.length; i++) {
-            if(jugadoresLocalStorage[i]._nombre === jugadorElegido) {
+            if(jugadoresLocalStorage[i]._nombre === nombreJugadorElegido) {
                 //creamos jugadores para devolverlos en un array
                 let jugador = new Jugador(jugadoresLocalStorage[i]._nombre, jugadoresLocalStorage[i]._vehiculo, jugadoresLocalStorage[i]._ranking);
                 console.log("jugador regenerado ", jugador);
@@ -32,13 +32,21 @@ function obtenerJugadoresEnObjeto(jugadoresElegidos) {
 
 
 function cargarInfoJugadoresEnDiv() {
-    // y cargamos los jugadores en el div con id "info-podio"
+    //cargamos los jugadores en el div con id "info-podio"
     contenidoDiv = '';
     jugadoresEnObj.forEach((jugador) => {
+        let img = '';
+        if(jugador._vehiculo._tipo === "coche") {
+            img = './imgs/car.png';
+        } else {
+            img = './imgs/moto.png';
+        }
+
         contenidoDiv += `<div class="info-jugador">
-            <p>Nombre: ${jugador._nombre}</p>
-            <p>Vehiculo: ${jugador._vehiculo._modelo}</p>
+            <p>Nombre: <strong>${jugador._nombre}</strong></p>
+            <p>Vehiculo: ${jugador._vehiculo._modelo} (${jugador._vehiculo._tipo})</p>
             <p>Ranking: ${jugador._ranking}</p>
+            <img src="${img}" alt="Imagen del vehículo" id="profile-img"/>
         </div>`;
     });
     document.getElementById("info-podio").innerHTML = contenidoDiv;

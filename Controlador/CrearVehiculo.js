@@ -3,18 +3,37 @@
 document.getElementById('formCrearVehiculo').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    modelo = document.getElementById('modelo').value;
-    traccion = document.getElementById('traccion').value;
-    velocidadMin = document.getElementById('velocidadMin').value;
-    velocidadMax = document.getElementById('velocidadMax').value;
+    let modelo = document.getElementById('modelo').value;
+    let tipo = document.getElementById('tipo').value;
+    let traccion = document.getElementById('traccion').value;
+    let velocidadMin = document.getElementById('velocidadMin').value;
+    let velocidadMax = document.getElementById('velocidadMax').value;
 
-    vehiculo = new Vehiculo(modelo, traccion, velocidadMin, velocidadMax);
-    vehiculosGuardados = JSON.parse(localStorage.getItem('vehiculos')) || [];
-    vehiculosGuardados.push(vehiculo);
+    if(tipo === 'coche') {
+        console.log("coche");
+        let coche = new Coche(modelo, traccion, velocidadMin, velocidadMax);
+        
+        vehiculosGuardados = JSON.parse(localStorage.getItem('vehiculos')) || [];
+        vehiculosGuardados.push(coche);
+    
+        alert("¡Se ha creado el coche!");
+    
+        localStorage.setItem('vehiculos', JSON.stringify(vehiculosGuardados));
+        console.log("Vehiculos guardados en localStorage hasta el momento: ", JSON.parse(localStorage.getItem('vehiculos')));
+    }
 
-    alert("Se ha creado el vehiculo!"); //cambiar x popup
+    if(tipo === 'moto') {
+        console.log("moto");
 
-    localStorage.setItem('vehiculos', JSON.stringify(vehiculosGuardados));
-
-    console.log("Vehiculos creados hasta el momento: ", JSON.parse(localStorage.getItem('vehiculos')));
+        let moto = new Motocicleta(modelo, traccion, velocidadMin, velocidadMax);
+        
+        vehiculosGuardados = JSON.parse(localStorage.getItem('vehiculos')) || [];
+        vehiculosGuardados.push(moto);
+    
+        alert("¡Se ha creado la moto!");
+    
+        localStorage.setItem('vehiculos', JSON.stringify(vehiculosGuardados));
+        console.log("Vehiculos guardados en localStorage hasta el momento: ", JSON.parse(localStorage.getItem('vehiculos')));
+    }
+    
 });

@@ -5,6 +5,7 @@ class Vehiculo {
         this._traccion = traccion;
         this._velocidadMin = velocidadMin;
         this._velocidadMax = velocidadMax;
+        //this._tipo = "";
     }
 
     get modelo() {
@@ -24,7 +25,7 @@ class Vehiculo {
     }
 
     toString() {
-        return `${this._modelo} | ${this._traccion} | ${this._velocidadMin} | ${this.velocidadMax}`;
+        return `${this._modelo} | ${this._tipo} | ${this._traccion} | ${this._velocidadMin} | ${this.velocidadMax}`;
     }
     
 }
