@@ -11,7 +11,7 @@ circuitos = circuitosJson.map(circuito => {
 
 contenidoSelect = '';
 circuitos.forEach(circuito => {
-    contenidoSelect += `<option value='${circuito.nombre}'>${circuito.nombre}</option>`;
+    contenidoSelect += `<option value='${circuito.nombre} | ${circuito.tiempo} | ${circuito.longitud}'>${circuito.nombre} | ${circuito.tiempo} | ${circuito.longitud} km</option>`;
 });
 document.getElementById('circuitos').innerHTML = contenidoSelect;
 
@@ -48,7 +48,7 @@ document.getElementById('formCrearCarrera').addEventListener('submit', (event) =
 
     //cogemos valores del form
     let circuito = document.getElementById('circuitos').value;
-    
+    console.log(circuito);
     let jugadores = [];
     let checkboxes = document.querySelectorAll('input[name="jugadores"]:checked');
     checkboxes.forEach(checkbox => {
