@@ -12,6 +12,7 @@ let jugadoresEnObj = obtenerJugadoresEnObjeto(jugadores); //devuelve array con o
 console.log("jugadoresEnObj->", jugadoresEnObj);
 
 cargarInfoJugadoresEnDiv();
+cargarInfoCircuitoEnDiv();
 cargarVehiculosEnPista();
 
 
@@ -25,9 +26,24 @@ function obtenerJugadoresEnObjeto(jugadoresElegidos) {
         for(let i = 0; i < jugadoresLocalStorage.length; i++) {
             if(jugadoresLocalStorage[i]._nombre === nombreJugadorElegido) {
                 //creamos jugadores para devolverlos en un array
-                let jugador = new Jugador(jugadoresLocalStorage[i]._nombre, jugadoresLocalStorage[i]._vehiculo, jugadoresLocalStorage[i]._ranking);
-                console.log("jugador regenerado ", jugador);
-                jugadoresObj.push(jugador);
+                if(jugadoresLocalStorage[i]._vehiculo._tipo == "coche") {
+                    let coche = new Coche(jugadoresLocalStorage[i]._vehiculo._modelo, jugadoresLocalStorage[i]._vehiculo._traccion, jugadoresLocalStorage[i]._vehiculo._velocidadMin, jugadoresLocalStorage[i]._vehiculo._velocidadMax);
+
+                    let jugador = new Jugador(jugadoresLocalStorage[i]._nombre, coche, jugadoresLocalStorage[i]._ranking);
+                    
+                    console.log("jugador regenerado de json a obj -> ", jugador);
+                    jugadoresObj.push(jugador);
+                } else {
+                    let moto = new Motocicleta(jugadoresLocalStorage[i]._vehiculo._modelo, jugadoresLocalStorage[i]._vehiculo._traccion, jugadoresLocalStorage[i]._vehiculo._velocidadMin, jugadoresLocalStorage[i]._vehiculo._velocidadMax);
+
+                    moto.seHaCaido = false; //añadimos propiedades para manejar las caidas de motos
+                    moto.turnosSinAvanzar = 0;
+
+                    let jugador = new Jugador(jugadoresLocalStorage[i]._nombre, moto, jugadoresLocalStorage[i]._ranking);
+                    
+                    console.log("jugador regenerado de json a obj -> ", jugador);
+                    jugadoresObj.push(jugador);
+                }
             }
         }
     });
@@ -49,11 +65,38 @@ function cargarInfoJugadoresEnDiv() {
         contenidoDiv += `<div class="info-jugador">
             <p>Nombre: <strong>${jugador._nombre}</strong></p>
             <p>Vehiculo: ${jugador._vehiculo._modelo} (${jugador._vehiculo._tipo})</p>
-            <p>Ranking: ${jugador._ranking}</p>
+            <div>Ranking: 
+                <ul>
+                    <li>Veces 1º -> ${jugador._ranking[0]}</li>
+                    <li>Veces 2º -> ${jugador._ranking[1]}</li>
+                    <li>Veces 3º -> ${jugador._ranking[2]}</li>
+                    <li>Veces 4º -> ${jugador._ranking[3]}</li>
+                </ul>
+            </div>
             <img src="${img}" alt="Imagen del vehículo" id="profile-img"/>
         </div>`;
     });
     document.getElementById("info-podio").innerHTML = contenidoDiv;
+}
+
+
+function cargarInfoCircuitoEnDiv() {
+    contenidoDiv = `
+    <div class="info-circuito">
+        <p>
+            Nombre: ${circuito.nombre}
+        </p>
+        
+        <p>
+            Tiempo: ${circuito.tiempo}
+        </p>
+        
+        <p>
+            Longitud: ${circuito.longitud} km
+        </p>
+    </div>`;
+
+    document.getElementById('info-circuito').innerHTML = contenidoDiv;
 }
 
 
@@ -76,26 +119,9 @@ function cargarVehiculosEnPista() {
     });
 }
 
+
 function moverVehiculos(ranking) {
-    console.log("MOVERvehiculos");
-    const vehiculos = document.querySelectorAll('.vehiculo');
-    const climaFactor = 0.8; // Ejemplo: factor que reduce la velocidad por clima (puedes personalizar)
-    console.log("Ranking actual:", ranking);
-
-    // jugadoresEnObj.forEach((jugador, index) => {
-    //     const vehiculo = vehiculos[index];
-    //     const velocidad = (Math.random() * (jugador._vehiculo._maxVelocidad - jugador._vehiculo._minVelocidad) + jugador._vehiculo._minVelocidad) * climaFactor;
-    //     const desplazamiento = velocidad / 10; // Divide por 10 para ajustar el movimiento por segundo
-    //     const nuevaPosicion = parseFloat(vehiculo.style.top) - desplazamiento;
-
-    //     // Si llegan al final de la pista, detener el movimiento
-    //     if (nuevaPosicion <= 0) {
-    //         vehiculo.style.top = '0px';
-    //         console.log(`¡${jugador._nombre} ha llegado a la meta!`);
-    //     } else {
-    //         vehiculo.style.top = `${nuevaPosicion}px`;
-    //     }
-    // });
+    console.log("moverVehiculos");
 
     jugadoresEnObj.forEach((jugador) => {
         if (ranking.includes(jugador._nombre)) {
@@ -104,14 +130,15 @@ function moverVehiculos(ranking) {
         if(jugador._vehiculo._tipo === "coche") {
             moverCoche(jugador, ranking);
         } else {
-            //moverMoto(jugador);
+            moverMoto(jugador, ranking);
         }
     });
 }
 
 
 function moverCoche(jugador, ranking) {
-    console.log("MOVERCOCHE");
+    console.log("moverCoche: ", jugador.nombre);
+
     let movimiento = Math.random() * (jugador._vehiculo._velocidadMax - jugador._vehiculo._velocidadMin) + jugador._vehiculo._velocidadMin; //rango + mínimo
 
     //se añaden modificadores según tracción y clima
@@ -164,19 +191,76 @@ function moverCoche(jugador, ranking) {
         vehiculoElement.style.left = "730px";
         console.log(`¡${jugador._nombre} ha llegado a la meta!`);
 
-        // let rankingsLibres = false;
-        // ranking.forEach((value) => {
-        //     if(value == 0) {
-        //         value = `${jugador._nombre}`;
-        //         rankingsLibres = true;
-        //     }
-        // });
+        if (!ranking.includes(jugador._nombre)) {
+            ranking.push(jugador._nombre);
+            console.log(`¡${jugador._nombre} ha llegado a la meta!`);
+        }
 
-        // if(!rankingsLibres) {
-        //     return [true, ranking];
-        // } else {
-        //     return [false, ranking];
-        // }
+    } else {
+        vehiculoElement.style.left = `${nuevaPosicion}px`;
+    }
+
+}
+
+
+function moverMoto(jugador, ranking) {
+    console.log("moverMoto: ", jugador.nombre);
+
+    if(jugador._vehiculo.seHaCaido) {
+        jugador._vehiculo.turnosSinAvanzar--;
+
+        if(jugador._vehiculo.turnosSinAvanzar <= 0) {
+            jugador._vehiculo.seHaCaido = false;
+            console.log(`El jugador en MOTO ${jugador._nombre} se ha levantado del suelo`);
+        } else {
+            console.log(`El jugador en MOTO ${jugador._nombre} sigue en el suelo`);
+            return;
+        }
+    }
+
+    if(jugador._vehiculo.caeAlSuelo(jugador._vehiculo._traccion, circuito.tiempo)) {
+        jugador._vehiculo.seHaCaido = true;
+        jugador._vehiculo.turnosSinAvanzar = 5;
+        console.log(`EL JUGADOR EN MOTO ${jugador._nombre} SE HA CAIDO AL SUELO. 5 TURNOS SIN PODER JUGAR.`);
+        return;
+    }
+
+    //Si no se ha caido de la moto
+    let movimiento = Math.random() * (jugador._vehiculo._velocidadMax - jugador._vehiculo._velocidadMin) + jugador._vehiculo._velocidadMin; //rango + mínimo
+
+    //se añaden modificadores según tracción
+    switch(jugador._vehiculo._traccion) {
+        case "mediana":
+            movimiento += 2;
+            break;
+        case "dura":
+            movimiento += 5;
+            break;
+        default:
+            console.log("Error al comprobar la traccion del vehiculo");
+    }
+
+    console.log("MOVIMIENTO COCHE KM/H-> " + movimiento); //km/h
+
+    let velocidadEnSegundos = movimiento / 3.6; //convertimos km/h en m/s
+
+    //la img de la pista es de 794 px
+    //hay que dividir 794 entre la longitud del circuito
+    let escalaPixelesPorMetro = 794 / (circuito.longitud * 1000);
+
+    let desplazamientoEnPixeles = velocidadEnSegundos * escalaPixelesPorMetro;
+    console.log("desplazamiento en pixeles" + desplazamientoEnPixeles);
+    
+    //actualizamos la posición del vehiculo en la img de la pista
+    const vehiculoElement = document.getElementById(`${jugador._nombre}`);
+    const posicionActual = parseFloat(vehiculoElement.style.left || "10px");
+    const nuevaPosicion = posicionActual + desplazamientoEnPixeles;
+    console.log("nuevaPosicion " + nuevaPosicion);
+
+    //paramos el vehiculo cuando llega a la meta
+    if (nuevaPosicion >= 730) {
+        vehiculoElement.style.left = "730px";
+        console.log(`¡${jugador._nombre} ha llegado a la meta!`);
 
         if (!ranking.includes(jugador._nombre)) {
             ranking.push(jugador._nombre);
@@ -185,8 +269,6 @@ function moverCoche(jugador, ranking) {
 
     } else {
         vehiculoElement.style.left = `${nuevaPosicion}px`;
-
-        //return [false, ranking];
     }
 
 }
@@ -203,18 +285,48 @@ function iniciarCarrera() {
         if(ranking.length == jugadoresEnObj.length) {
             console.log("FIN CARRERA");
             clearInterval(intervalo);
-            alert(`¡LA CARRERA HA FINALIZADO! ¡El jugador ${ranking[1]} ha ganado! \n Ranking: ${ranking.join(", ")}`);
-        }
-        //comprobar si han llegado a la meta
-        // const todosLlegaron = Array.from(document.querySelectorAll('.vehiculo')).every(
-        //     (vehiculo) => parseFloat(vehiculo.style.top) <= 0
-        // );
+            alert(`¡LA CARRERA HA FINALIZADO! ¡El jugador ${ranking[0]} ha ganado! \nRanking: ${ranking.join(", ")}`);
 
-        // if (todosLlegaron) {
-        //     console.log('¡La carrera ha terminado!');
-        //     clearInterval(intervalo);
-            
-        // }
+            //actualizar rankings
+            for(let i = 0; i < ranking.length; i++) {
+                jugadoresEnObj.forEach(jugador => {
+                    if(jugador.nombre === ranking[i]) {
+                        switch(i) {
+                            case 0:
+                                jugador._ranking[0]++; //aumentamos las veces que ha quedado en 1ra posicion
+                                break;
+                            case 1:
+                                jugador._ranking[1]++; //veces que ha quedado segundo
+                                break;
+                            case 2:
+                                jugador._ranking[2]++; //veces que ha quedado tercero
+                                break;
+                            case 3:
+                                jugador._ranking[3]++; //veces que ha quedado cuarto
+                                break;
+                        }
+                    }
+                });
+            }
+            cargarInfoJugadoresEnDiv(); //recargamos la info actualizada en el div
+
+            //guardamos los nuevos rankings en localStorage
+            localStorageJugadores = JSON.parse(localStorage.getItem('jugadores'));
+            localStorageJugadoresObj = localStorageJugadores.map((jugador) => {
+                return new Jugador(jugador._nombre, jugador._vehiculo, jugador._ranking);
+            });
+
+            jugadoresEnObj.forEach(jugadorDeEstaPartida => {
+                localStorageJugadoresObj.forEach(jugadorLocalStorage => {
+                    if(jugadorDeEstaPartida._nombre === jugadorLocalStorage._nombre) {
+                        jugadorLocalStorage._ranking = jugadorDeEstaPartida._ranking;
+                    }
+                });
+            });
+
+            localStorage.setItem('jugadores', JSON.stringify(localStorageJugadoresObj));
+            console.log("JUGADORES LOCALSTORAGE: ", JSON.parse(localStorage.getItem('jugadores')));
+        }
     }, 100);
 }
 

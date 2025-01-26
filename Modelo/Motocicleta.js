@@ -5,7 +5,15 @@ class Motocicleta extends Vehiculo {
         this._tipo = "moto";
     }
 
-    caeAlSuelo() {
-
+    caeAlSuelo(traccion, clima) {
+        if(clima === "lluvioso" && traccion === "dura") {
+            return Math.random() <= 0.30;
+        } else if((clima === "humedo" && traccion === "dura") || (clima === "lluvioso" && traccion === "media")) {
+            return Math.random() <= 0.20;
+        } else if(clima === "humedo" && traccion === "media") {
+            return Math.random() <= 0.10;
+        } else {
+            return Math.random() <= 0.05;
+        }
     }
 }
