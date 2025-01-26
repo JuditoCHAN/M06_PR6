@@ -39,6 +39,15 @@ document.addEventListener("DOMContentLoaded", function () {
             (vehiculo) => vehiculo._modelo === jugador._vehiculo._modelo
         );
         vehiculoSelect.value = vehiculoIndex !== -1 ? vehiculoIndex : "";
+
+        //mostrar ranking (no se puede editar)
+        const ranking = jugador._ranking || [0, 0, 0, 0];
+        document.getElementById("ranking").innerHTML = `
+            1º: ${ranking[0]} | 
+            2º: ${ranking[1]} | 
+            3º: ${ranking[2]} | 
+            4º: ${ranking[3]}
+        `;
     });
 
     //guardamos en localStorage

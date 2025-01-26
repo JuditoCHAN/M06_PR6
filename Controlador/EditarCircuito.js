@@ -5,19 +5,6 @@ const formEditarCircuito = document.getElementById('formEditarCircuito');
 let circuitos = JSON.parse(localStorage.getItem('circuitos')) || [];
 console.log("Circuitos obtenidos de localStorage -> ", circuitos);
 
-
-// if (circuitos.length === 0) {
-//     alert("No hay circuitos disponibles.");
-// } else {
-//     circuitos.forEach((circuito, index) => {
-//         const option = document.createElement('option');
-//         option.value = index;
-//         option.textContent = circuito._nombre;
-//         selectCircuito.appendChild(option);
-//     });
-// }
-
-
 //llenamos el select con circuitos
 function cargarSelectCircuitos() {
     selectCircuito.innerHTML = ``;
@@ -38,8 +25,8 @@ selectCircuito.addEventListener("change", function () {
     document.getElementById("nombre").value = circuito._nombre;
     document.getElementById("tiempo").value = circuito._tiempo;
     document.getElementById("longitud").value = circuito._longitud;
-    
 });
+
 
 
 formEditarCircuito.addEventListener('submit', (event) => {
