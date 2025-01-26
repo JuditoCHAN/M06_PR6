@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded", function () {
 const selectCircuito = document.getElementById('circuito');
 const formEditarCircuito = document.getElementById('formEditarCircuito');
 
@@ -7,7 +8,7 @@ console.log("Circuitos obtenidos de localStorage -> ", circuitos);
 
 //llenamos el select con circuitos
 function cargarSelectCircuitos() {
-    selectCircuito.innerHTML = ``;
+    selectCircuito.innerHTML = `<option value="">Seleccionar...</option>`;
     circuitos.forEach((circuito, index) => {
         selectCircuito.innerHTML += `<option value="${index}">${circuito._nombre} - ${circuito._tiempo} - ${circuito._longitud}</option>`;
     });
@@ -62,3 +63,5 @@ formEditarCircuito.addEventListener('submit', (event) => {
 
 //al cargarse la pág
 cargarSelectCircuitos();
+
+});

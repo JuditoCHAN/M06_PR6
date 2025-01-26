@@ -19,21 +19,27 @@
             border-radius: 10px;
         }
 
-        #img {
-            max-width: 30%; 
-            height: auto;   
-            display: block;
-            margin: 0 auto;
+        input[type=text], input[type=number], nav, select {
+            background: linear-gradient(to right, #f8c8d095, #c27adb82);
+
+        }
+        
+        button[type=submit] {
+            background-color: darkorchid;
         }
 
-        body {
+        /* body {
             background-image: url('https://img.freepik.com/premium-photo/car-with-name-car-top_849715-6130.jpg');
             background-size: cover;
             background-position: center;
             height: 100vh; 
             margin: 0;
-        }
+        } */
 
+        body {
+            background-color: #fbf1fe;
+        }
+        
         .container {
             display: flex;
             justify-content: center;
@@ -41,12 +47,16 @@
         }
 
         p {
-            font-size: 2.5rem;
+            font-size: 2rem;
             opacity: 0;
             animation: heartbeat 2s infinite, fade 1s forwards;
             transition: opacity 1s;
             color: rgb(252, 202, 252);
-            padding-top: 100px;
+            padding-top: 30px;
+        }
+
+        a {
+            color: darkorchid;
         }
 
         @keyframes heartbeat {
@@ -67,7 +77,35 @@
             }     
         }
 
-            
+        .banner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .banner {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            width: 25%;
+        }
+
+        .banner:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 12px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+
+        .banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
     </style>
 </head>
 <body>
@@ -119,14 +157,60 @@
         <a href="ConfigCarrera.html" class="navbar-brand">JUGAR</a>
     </nav>
 
-    <!-- <img src="https://img.freepik.com/premium-photo/car-with-name-car-top_849715-6130.jpg" class="rounded mx-auto d-block w-100 my-4" alt="Imagen 3" id="img"> -->
      <div class="container">
         <p class="mx-auto"><a href="ConfigCarrera.html" class="text-decoration-none">Inicia tu carrera</a></p>
      </div>
-    
-     <script>
+
+     <div class="banner-container d-flex">
+        <div class="banner" data-bs-toggle="tooltip" title="Crea un vehículo">
+            <a href="CrearVehiculo.html"><img src="./imgs/fondo2.jpg" alt="Banner vehiculo"></a>
+        </div>
+
+        <div class="banner" data-bs-toggle="tooltip" title="Crea un jugador">
+            <a href="CrearJugador.html"><img src="./imgs/fondo1.jpg" alt="Banner jugador"></a>
+        </div>
+
+        <div class="banner" data-bs-toggle="tooltip" title="Crea un circuito">
+            <a href="CrearCircuito.html"><img src="./imgs/fondo3.jpg" alt="Banner circuito"></a>
+        </div>
+    </div>
+
+
+    <script src="../Modelo/Vehiculo.js"></script>
+    <script src="../Modelo/Coche.js"></script>
+    <script src="../Modelo/Motocicleta.js"></script>
+    <script src="../Modelo/Circuito.js"></script>
+    <script src="../Modelo/Jugador.js"></script>
+    <script>
         // const msj = new SpeechSynthesisUtterance("Hola a todos bienvenidos a mi juego");
         // window.speechSynthesis.speak(msj);
+
+        
+        //habilitar los tooltips de Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')); //convierte el nodeList devuelto x querySelectorAll en array normal
+        var tooltipList = tooltipTriggerList.map((tooltipTriggerEl) => {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    
+
+        //cargamos jugadores, vehiculos y circuitos predefinidos a localStorage
+        let coche1 = new Coche("McLaren 720S", "blanda", 0, 350); 
+        let moto1 = new Motocicleta("Yamaha YZR-M1", "dura", 0, 370);
+
+        let jugador1 = new Jugador("Carlos", coche1, [0, 0, 0, 0]);
+        let jugador2 = new Jugador("Alonso", moto1, [0, 0, 0, 0]);
+
+        let circuito1 = new Circuito("Mónaco", "seco", 5);
+        let circuito2 = new Circuito("Silverstone", "lluvioso", 6);
+        
+        localStorage.setItem('vehiculos', JSON.stringify([coche1, moto1]));
+        console.log("Vehiculos guardados en localStorage -> ", JSON.parse(localStorage.getItem('vehiculos')));
+
+        localStorage.setItem('jugadores', JSON.stringify([jugador1, jugador2]));
+        console.log("Jugadores guardados en localStorage -> ", JSON.parse(localStorage.getItem('jugadores')));
+
+        localStorage.setItem('circuitos', JSON.stringify([circuito1, circuito2]));
+        console.log("Circuitos guardados en localStorage -> ", JSON.parse(localStorage.getItem('circuitos')));
      </script>
 </body>
 </html>
